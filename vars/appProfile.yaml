@@ -1,0 +1,15 @@
+recon:
+  - 'ct-recon-qpid'
+  - 'ct-recon-app-validator'
+  - 'ct-recon-apps'
+  - 'ct-recon-dig'
+  - 'ct-recon-ig-controller'
+  - 'ct-recon-ig-processing'
+
+ssf:
+  - 'ct-recon-qpid'
+  - 'ct-recon-app-validator'
+  - 'ct-recon-apps'
+  - 'ct-recon-dig'
+  - 'ct-recon-ig-controller'
+  - 'ct-recon-ig-processing'

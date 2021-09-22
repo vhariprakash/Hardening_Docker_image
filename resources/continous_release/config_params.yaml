@@ -1,0 +1,91 @@
+approvers:
+    EHL:
+        - '305015868'
+
+    CCS-Digital:
+        - '305027033'
+        - '212705569'
+        - '305019004'
+        - '212719114'
+        
+        
+    IS:
+        - '305027033'
+
+    PeriOP:
+        - '305027033'
+        - '502535001'
+        - '212760069'
+        
+    TEST:
+        - '305027033'
+        
+process_hook:
+    EHL: ehl_chart_promotion
+    CCS-Digital: ccs_chart_promotion
+    IS: is_chart_promotion
+    PeriOP: periop_chart_promotion
+    TEST: ccs_chart_promotion
+
+verify_hook:
+    EHL:
+    CCS-Digital:
+    IS:
+    PeriOP:
+    TEST:
+
+
+custom_parameters:
+    CCS-Digital:
+        artifactory_url : 'https://hc-eu-west-aws-artifactory.cloud.health.ge.com'
+        artifactory_repo : 'generic-coreload-snapshot'
+        prod_repo:         'generic-mural'
+        prod_folder     : 'mural-setup'
+        docker_release_repo : 'docker-clinical-care-apps-all'
+        docker_prod_repo    : 'docker-mural'
+        helm_release_repo : 'helm-mural'
+        helm_prod_repo : 'helm-mural'
+        release_artifactory : 'blr-artifactory.cloud.health.ge.com'
+        production_artifactory : 'delivery.gehealthcare.com'
+        http_proxy: http://cis-india-pitc-bangalore.corporate.ge.com:80
+        https_proxy: http://cis-india-pitc-bangalore.corporate.ge.com:80
+        no_proxy: .ge.com,hc-eu-west-aws-artifactory.cloud.health.ge.com,blr-artifactory.cloud.health.ge.com,hc-us-east-aws-artifactory.cloud.health.ge.com
+
+        
+    EHL:
+        artifactory_url : 'https://hc-eu-west-aws-artifactory.cloud.health.ge.com'
+        artifactory_repo : 'generic-coreload-snapshot'
+        prod_repo       : 'generic-mural'
+        prod_folder     : 'mural-setup'
+        docker_release_repo : 'docker-clinical-care-apps-all'
+        docker_prod_repo    : 'docker-mural'
+        release_artifactory : 'blr-artifactory.cloud.health.ge.com'
+        production_artifactory : 'delivery.gehealthcare.com'
+    
+    IS:
+        artifactory_url : 'https://hc-eu-west-aws-artifactory.cloud.health.ge.com'
+
+    PeriOP:
+        artifactory_url : 'https://hc-eu-west-aws-artifactory.cloud.health.ge.com'
+        artifactory_repo : 'generic-coreload-snapshot'
+        prod_repo       : 'generic-periop'
+        prod_folder     : 'periop-setup'
+        docker_release_repo : 'docker-periop-prod'
+        docker_prod_repo    : 'docker-periop'
+        release_artifactory : 'blr-artifactory.cloud.health.ge.com'
+        production_artifactory : 'delivery.gehealthcare.com'
+
+    TEST:
+        artifactory_url : 'https://hc-eu-west-aws-artifactory.cloud.health.ge.com'
+        artifactory_repo : 'generic-coreload-snapshot'
+        prod_repo       : 'generic-coreload-snapshot'
+        prod_folder     : 'test_release'
+        docker_release_repo : 'docker-coreload-snapshot'
+        docker_prod_repo    : 'docker-coreload-snapshot'
+        release_artifactory : 'hc-eu-west-aws-artifactory.cloud.health.ge.com'
+        production_artifactory : 'hc-eu-west-aws-artifactory.cloud.health.ge.com'
+        http_proxy  : 'http://cis-india-pitc-bangalore.corporate.ge.com:80'
+        https_proxy : 'http://cis-india-pitc-bangalore.corporate.ge.com:80'
+        no_proxy    : '.ge.com,localhost,10.96.0.0/12,127.0.0.0/32'
+    
+    

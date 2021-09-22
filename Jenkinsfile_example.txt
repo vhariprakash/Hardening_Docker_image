@@ -1,0 +1,69 @@
+@Library(['common-lib-devops@release2', 'dsl-lib']) _
+common_pipeline {
+//------------------- Communication Parameters --------------------------------
+    mailingList                = 'jayaprasad.rao@ge.com'
+
+//------------------- Common Parameters ---------------------------------------
+    project                    = 'pltawlibs'
+    Modality                   = 'mammo'            //Possible values => 'coreload-5x',  'CyberPackage', 'mammo'
+    version                    = '1.2.3'
+    enable_stages              = ['code_checkout','build_and_unit_test', 'publish' ]
+                                    //Possible values => [ 'code_checkout', 'ALM_Integration',    
+                                    //                     'build_and_unit_test', 'sonar_analysis',  'publish', 'iso_creation',    
+                                    //                     'create_and_publish_docker', 'docker_scan', 'deployment_and_testing', 
+                                    //                     'update_iso_manifest', 'update_master_release_xml']
+
+//------------------- Checkout parameters ----------------------------------------
+//    checkout_folder = "sources/PLTAWlibs"        // Default folder is workspace
+
+//------------------- Build parameters ----------------------------------------
+//    code_checkout_prestep      = 'mkdir -p sources ; cd sources; echo `pwd`'
+//    code_checkout_poststep     = 'sources/PLTAWlibs/devops_scripts/mammoDevInfra_checkout.sh "Dev_Zephyr2_M2"'
+    enableWorkspaceCleanup     = true
+    enableDebugForDSL          = false
+    buildType                  = 'cpp'                          //Possible values => 'maven', 'gradle', 'exe', 'go', 'python', 'shell'
+    buildCommand               = 'echo "No seperate build required"'
+    publishType                = [ 'generic' : '*.tar' ]        //Possible values => 'maven', 'gradle', 'generic', 'yum', 'pypi'
+
+//----------
+//    build_and_unit_test_prestep  = 'source sources/MammoDevInfra/scripts/setDevEnv.sh; unset http_proxy'
+//    build_and_unit_test_poststep = ''
+
+//    publish_prestep            = 'sources/MammoDevInfra/scripts/packageTarball.sh -b Debug PLTAWlibs'
+//    publish_poststep           = ''
+      publish_path             = '7.30.1'
+//      dynamic_publish_path     = 'get_version.sh'
+
+//------------------- Docker Create and Publish -------------------------------
+    docker_build_args          = ''
+
+//------------------- ISO Create and Publish ----------------------------------
+    forcedBuild                = true
+    usePromotedArtifacts       = false
+    isoVersion                 = '1.0.0'
+    isoGroupName               = 'pltawlibs'
+    isoNames                   = 'pltawlibs'
+
+//------------------- Update ISO Manifest -------------------------------------
+    source_deployment_folder   = 'deployment-files/helm_charts/pltawlibs'
+    manifest_folder            = 'deployment-files/deployment_manifest'
+    mupltiple_iso_existence    = false
+//    checksumManifestUpdate     = false
+
+
+//------------------- CD Parameters -------------------------------------------
+    deployType                 = ['iso-eml']      //Possible values =>  ['docker', 'helm', 'rpm', 'iso-eml', 'iso-ehl']
+    bddPodNamespace            = 'edison-core'
+    bddOnServer                = 'false'
+
+    edgeTargetNodeRootDir      = '/home/wrsroot/'
+    edgeTargetNodeCredId       = 'EdgeTargetNode'
+    edgeTargetNodeIp           = '3.204.28.123'
+    edgeTargetNodeSshPort      = '222'
+    iso_name_without_extension = 'edison-licensing_1.2.0_162_09112020'
+
+    emlTargetNodeRootDir       = '/home/EML/EML_HOME/'
+    emlTargetNodeCredId        = 'EmlTargetNode'
+    emlTargetNodeIp            = '10.177.204.225'
+    emlTargetNodeSshPort       = '22'
+}

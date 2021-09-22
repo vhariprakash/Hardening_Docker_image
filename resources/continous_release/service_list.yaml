@@ -1,0 +1,20 @@
+apps_list:
+    PAAS-CHARTS: blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/paas-charts
+    CCS-HL7ADAPTER-CHARTS: blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/ccs-hl7adapter
+    CCS-PERSISTENCE-CHARTS: blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/ccs-persistence
+    CCS-PERSISTENCE-DB: blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/ccs-persistence-dbprov
+    CCS-NM-CHARTS: blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/ccs-nm-charts
+    CCS-APPS-CHARTS: blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/ccs-apps
+    CONTEXTMANAGER-API: blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/contextmanager-api
+    CCS-CLINICALNOTES: blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/ccs-clinicalnotes
+    MURAL-SETUP-V2.0.0.EXE (CM CLIENT): hc-eu-west-aws-artifactory.cloud.health.ge.com/artifactory/generic-mural/mural-setup/Mural-setup
+    MURAL-TERRAFORM-PLATFORM: hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-clinical-care-apps-all
+    SANSORO: blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/ccs-sansoro
+    MURAL-DATA-EXTRACT: blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/caddo-data-export
+    DCS-APP-REGISTRY: blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/perinatal/dcs-app-registry
+    DCS-APP-SURVEILLANCE: blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/perinatal/dcs-app-surveillance
+    DCS-REGISTRY-DB-PROVISIONING: blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/perinatal/dcs-registry-db-provisioning
+    DCS-SURVEILLANCE-DB-PROVISIONING: blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/perinatal/dcs-surveillance-db-provisioning
+    CCS-ADT-SERVICE: https://blr-artifactory.cloud.health.ge.com/artifactory/helm-mural-all/ccs-adt-service
+    PERINATAL APP INSTALL: hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-clinical-care-apps-all/perinatalhelmterraform
+    TEST-SERVICE: auto-delete-service

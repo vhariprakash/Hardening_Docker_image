@@ -1,0 +1,317 @@
+@Library(['common-lib-devops@cd-pipeline-coreload', 'dsl-lib']) _
+
+def target_node = "Docker06";
+def emailExtraMsg='';
+node("${target_node}") {
+    env.JAAS_LOGGER_LEVEL= "FINE"
+    env.http_proxy= ''
+    env.https_proxy= ''
+    def baseDir = pwd()
+    def  isosToBeCreated = []
+    def selectedIsoArray = []
+    def build_id = "${env.BUILD_ID}"
+    def iso_creation_location
+    def iso_catalogue
+    def current_date
+    def build_identifier
+    def iso_name_without_extension
+    def iso_name_with_version
+    def md5_file
+    def releaseVersion
+    def gitlabBranch = "${env.Gitlab_Branch}"
+    def project_name = "${env.Project_Name}"
+    def group_name = "${env.Group_Name}"
+    def iso_checksum = ''
+    def build_number
+    def md5_location_in_artifactory
+    def iso_location_in_artifactory
+    def generic-iso-snapshot = "${env.generic-iso-snapshot}"?:generic-eis-snapshot-all"
+    def package_metadata_location_in_artifactory
+    def isoGroups
+    def isoGroupsArray = []
+    def isoManifestData = [:]
+    def selected_isos = "${env.ISOs}" as String
+    def artifactObj = new org.utils.artifact()
+    def validateManifestObj = new org.utils.validateManifest()
+    String usePromotedArtifacts = "${env.Use_Promoted_Artifacts_Only}".toString()
+    String forcedBuild = "${env.Forced_build}".toString()
+    String commitHash = ''
+    String lastCommitValue = ''
+    //def deploy_repo = "git@gitlab-gxp.cloud.health.ge.com:Edison-Imaging-Service/EES-Deploy.git"
+    //def artifactoryApiTokenCredId ="ArtifactoryLoginToken"
+    def deploy_repo = "${env.isoCatalogueRepo}"?:"git@gitlab-gxp.cloud.health.ge.com:Imaging-platform/CL-5x-Deploy.git"
+    //env variables
+    def artifactory_location = "${env.artifactory_location}"?:"hc-eu-west-aws-artifactory.cloud.health.ge.com"
+    def cred_type = "${env.CredType}"
+    if (cred_type == "ApiToken"){
+        def artifactoryCredId = "gip_sv01_artifactory_eu"
+    }
+    def git_cred_id = "${env.gitCredId}"
+
+
+
+   /* println nightlyBuild.getClass()
+    println nightlyBuild
+    println usePromotedArtifacts.getClass()
+    println usePromotedArtifacts*/
+    println selected_isos
+    try{
+        dir("ees-deploy"){
+            timestamps {
+            step([$class: 'WsCleanup'])
+            checkout scm
+            }
+            git branch: "${gitlabBranch}", changelog: false, credentialsId: 'ssh-Jenkins-s02', poll: false, url: "${deploy_repo}"
+            commitHash = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+            isoGroups = findFiles(glob: "*iso-manifests/*.yaml")
+            for (counter = 0; counter < isoGroups.size(); counter++) {
+                isoGroupsArray[counter] = isoGroups[counter].name.minus(".yaml")
+            }
+            println isoGroupsArray
+            println "total no. of ISOs are " + isoGroups.size()
+            selectedIsoArray = selected_isos.replaceAll('"','').trim().tokenize(',')
+            if (usePromotedArtifacts == "false"){
+                if ( (selectedIsoArray.size() > 1) & (forcedBuild == "false") ) {
+                    stage ("pre-check"){
+                        selectedIsoArray.each{
+                            println it
+                            echo 'Checking if the ISO content is updated or not '
+                            def storeCreatedIsoCommitsData = readYaml file: 'storeCreatedIsoCommits.yaml'
+                            lastCommitValue = storeCreatedIsoCommitsData["${it}.yaml"]
+                            def manifestUpdateStatus
+                            manifestUpdateStatus = sh(returnStatus: true, script: "git diff --exit-code ${lastCommitValue} ${commitHash}  -- iso-manifests/${it}.yaml && echo \$?")
+                            echo "changed file is $manifestUpdateStatus"
+                            println manifestUpdateStatus
+                            println manifestUpdateStatus.getClass()
+
+                            if( "${manifestUpdateStatus}" == "0" ){
+                                println "***************************************************************************"
+                                println "****************The ISO content has not changed, skipping creation of ${it}****************"
+                                println "***************************************************************************"
+                                //throw new Exception("**********************${it} content has not changed. Failing the job**********************")
+                            }
+                            else{
+                                isosToBeCreated.add(it)
+                                 storeCreatedIsoCommitsData["${it}.yaml"] = commitHash
+                                 sh "rm -rf storeCreatedIsoCommits.yaml"
+                                 writeYaml file: "storeCreatedIsoCommits.yaml", data: storeCreatedIsoCommitsData
+                                 sh """cat storeCreatedIsoCommits.yaml
+                                 git add storeCreatedIsoCommits.yaml
+                                 """
+                            }
+                        }
+                    }
+                    selectedIsoArray = isosToBeCreated
+                    if (selectedIsoArray.size() == 0){
+                        println "********************** None of the ISOs have changed.**********************"
+                        currentBuild.result = 'ABORTED'
+                        error('********************** None of the ISOs have changed.**********************')
+                    }
+                }
+            }
+            /*if (nightlyBuild == "true"){
+               selectedIsoArray = isoGroupsArray
+            }*/
+            /*if (usePromotedArtifacts == "true"){
+                selectedIsoArray = selectedIsoArray
+            }*/
+            selectedIsoArray.each{
+                isoManifestData = readYaml file:("iso-manifests/${it}.yaml")
+                if (!validateManifestObj.check_if_valid_manifest(isoManifestData)){
+                    error("The build failed because ISO manifest file, ${it}.yaml is not correct.")
+                }
+                def iso_name = it
+                build_id = "${env.BUILD_ID}"
+                iso_creation_location = "${baseDir}/iso_creation_directory/${build_id}_${iso_name}"
+                iso_catalogue = 'ISO-Catalogue.yaml'
+                releaseVersion = "${env.EES_Version}"
+                current_date = new Date().format( 'ddMMyyyy' )
+                build_identifier = "${env.ISO_Version}_${build_id}_${current_date}"
+                iso_name_without_extension = "${iso_name}_${build_identifier}"
+                iso_name_with_version = "${iso_name_without_extension}.iso"
+                md5_file = "${iso_name_without_extension}.md5"
+                gitlabBranch = "${env.Gitlab_Branch}"
+                project_name = "${env.Project_Name}"
+                group_name = "${env.Group_Name}"
+                iso_checksum = ''
+                build_description = "${iso_name}--${gitlabBranch}--${releaseVersion}"
+                build_number = "${env.BUILD_NUMBER}".toString()
+                md5_location_in_artifactory = "https://${artifactory_location}/artifactory/${generic-iso-snapshot}/${iso_name}/${iso_name_with_version}.md5"
+                iso_location_in_artifactory = "https://${artifactory_location}/artifactory/${generic-iso-snapshot}/${iso_name}/${iso_name_with_version}"
+                package_metadata_location_in_artifactory = "https://${artifactory_location}/artifactory/${generic-iso-snapshot}/${iso_name}/${iso_name_without_extension}_packagemetadata.json"
+                currentBuild.description = "<span style=\"background-color:green;color:#fff;padding:5px;\">${build_description}</span>"
+
+                // cleanup the iso creation folder
+                sh "rm -rf ${iso_creation_location}"
+
+                // create folder for iso creation
+                sh "mkdir -p ${iso_creation_location}"
+                echo "ISO will be created at: ${iso_creation_location}"
+                dir ("${iso_creation_location}") {
+                    echo "**********************${iso_name} ISO WILL BE CREATED HERE***************************"
+                    echo "${iso_creation_location}"
+                    echo '***************THIS FOLDER WILL BE DELETED AT THE END OF THIS PIPELINE***************'
+                }
+
+                stage ("Create ${iso_name} ISO"){
+                    app_docker_iso("${releaseVersion}", "${gitlabBranch}","${iso_name}","${iso_creation_location}", "${usePromotedArtifacts}", "${deploy_repo}")
+                    sh """
+                        mkisofs -quiet -J -l -R -V "docker" -iso-level 4 -o ${iso_name_with_version} ${iso_creation_location}
+                    """
+                    iso_checksum = sh returnStdout: true, script: """md5sum ${iso_name_with_version}"""
+                    println iso_checksum
+                    if (iso_checksum.contains(' ')){
+                        iso_checksum = iso_checksum.split(' ')[0]
+                    }
+                    writeFile file: md5_file, text: iso_checksum
+                }
+
+                stage ("Publish ${iso_name} ISO") {
+                    if (cred_type == "ApiToken"){
+                        withCredentials([string(credentialsId: 'ArtifactoryLoginToken', variable: 'CREDENTIAL')])
+                    elseif (cred_type == "UsernamePwd"){
+                        withCredentials([usernamePassword(credentialsId: 'gip_sv01_artifactory_eu', usernameVariable: 'USERNAME', passwordVariable: 'CREDENTIAL')]) {
+
+                        retry(3) {
+                            sh (returnStdout: true, script: """curl --noproxy "*" -s -S -H 'X-JFrog-Art-Api: ${CREDENTIAL}' -T ${iso_name_with_version}  ${iso_location_in_artifactory}""")
+                            if(!artifactObj.check_if_artifact_exists(iso_location_in_artifactory)){
+                                throw new Exception("FAILURE : Failed to upload ISO to artifactory, Publish ${iso_name} ISO stage failed")
+                            }
+                        }
+                        retry(3) {
+                            sh (returnStdout: true, script: """curl --noproxy "*" -s -S -H 'X-JFrog-Art-Api: ${CREDENTIAL}' -T ${md5_file}  ${md5_location_in_artifactory}""")
+                            if(!artifactObj.check_if_artifact_exists(md5_location_in_artifactory)){
+                                throw new Exception("FAILURE : Failed to upload md5 file to artifactory, Publish ${iso_name} ISO stage failed")
+                            }
+                        }
+                    }
+                }
+            }
+                def package_metadata_file_location = "./Package-Metadata/${iso_name}.json"
+
+                stage ("Update Manifest for ${iso_name}") {
+                    echo 'Update manifest'
+                        sh "pwd"
+                        sh "ls -la"
+                        def package_metadata_content = readJSON file:package_metadata_file_location
+                        package_metadata_content['packageId'] = "${iso_name_without_extension}" as String
+                        package_metadata_content['path'][0]['checksum'] = "${iso_checksum}" as String
+                        package_metadata_content['path'][0]['file'] = "${iso_name_with_version}" as String
+                        package_metadata_content['release'] = "${build_id}" as String
+                        package_metadata_content['version'] = "${env.ISO_Version}" as String
+                        writeJSON file: package_metadata_file_location, json: package_metadata_content, pretty: 4
+                        withCredentials([usernamePassword(credentialsId: 'gip_sv01_artifactory_eu', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                           retry(3) {
+                                sh (returnStdout: true, script: """curl --noproxy "*" -s -S -H 'X-JFrog-Art-Api: ${PASSWORD}' -T ${package_metadata_file_location}  ${package_metadata_location_in_artifactory}""")
+                                if(!artifactObj.check_if_artifact_exists(package_metadata_location_in_artifactory)){
+                                    throw new Exception("Failed to upload metadata file to artifactory, Update Manifest for ${iso_name}")
+                                }
+                            }
+                        }
+                        sh "cat ${iso_catalogue}"
+                        def iso_catalogue_parsed = readYaml file: iso_catalogue
+
+                        // Update ISOs
+                        if(iso_catalogue_parsed['ISOs']){
+                            if(iso_catalogue_parsed['ISOs'][iso_name]){
+                                iso_catalogue_parsed['ISOs'][iso_name] = "${iso_name}/${iso_name_with_version}"
+                            }
+                            else{
+                                iso_catalogue_parsed['ISOs'][iso_name] = "${iso_name}/${iso_name_with_version}"
+                            }
+                        }
+                        else {
+                            iso_catalogue_parsed['ISOs'] = [:]
+                            iso_catalogue_parsed['ISOs'][iso_name] = "${iso_name}/${iso_name_with_version}"
+                        }
+
+                        // Update Package Metadata
+                        if(iso_catalogue_parsed['PackageMetadata']){
+                            if(iso_catalogue_parsed['PackageMetadata'][iso_name]){
+                                iso_catalogue_parsed['PackageMetadata'][iso_name] = "${iso_name}/${iso_name_without_extension}_packagemetadata.json"
+                            }
+                            else{
+                                iso_catalogue_parsed['PackageMetadata'][iso_name] = "${iso_name}/${iso_name_without_extension}_packagemetadata.json"
+                            }
+                        }
+                        else {
+                            iso_catalogue_parsed['PackageMetadata'] = [:]
+                            iso_catalogue_parsed['PackageMetadata'][iso_name] = "${iso_name}/${iso_name_without_extension}_packagemetadata.json"
+                        }
+
+                        sh "rm -rf ${iso_catalogue}"
+                        writeYaml file: "${iso_catalogue}", data: iso_catalogue_parsed
+                        sh "git add ${iso_catalogue} ${package_metadata_file_location}"
+                        gitPush{
+                            commit_hash_map_file = 'isoCatalogueCommit.yaml'
+                            commitMessage = "[ci-skip]"
+                            gitPushBranch = "${gitlabBranch}"
+                        }
+                    //}
+                }
+                stage ("Clean-Up for ${iso_name}"){
+                    echo 'cleanup'
+                    sh "rm -rf ${iso_creation_location}"
+                }
+                echo "|******************************iso_location_in_artifactory*****************************************|"
+                echo "ISO location in artifactory: ${iso_location_in_artifactory}"
+                echo "md5 location in Artifactory: ${md5_location_in_artifactory}"
+                echo "Package Metadata location in Artifactory is: ${package_metadata_location_in_artifactory}"
+                echo "|******************************iso_location_in_artifactory*****************************************|"
+            }
+        }
+    }catch(err){
+        currentBuild.result = 'FAILURE'
+        emailExtraMsg = "Build Failure:"+ err.getMessage()
+        throw err
+    }
+    finally {
+        echo '***************cleanup started************************'
+        sh "rm -rf ${iso_creation_location}"
+        echo '***************cleanup finished***********************'
+    }
+}
+
+def app_docker_iso(releaseVersion,gitlabBranch,iso_name,iso_creation_location,usePromotedArtifacts,deploy_repo){
+    def aca_space = 'data/aca'
+    def docker_images_space = 'docker_images'
+    def manifest_space = 'manifest'
+    def helm_space = 'helm'
+    dir('EES-Deploy'){
+        dir ("${iso_creation_location}") {
+            echo '[appISOPackageDocker] Creating base structure of application iso'
+            sh "mkdir -p ${aca_space}"
+            sh "mkdir -p ${docker_images_space}"
+            sh "mkdir -p ${helm_space}"
+            sh "mkdir -p ${manifest_space}"
+        }
+        def docker_app_iso_creation_location = "${iso_creation_location}/${docker_images_space}"
+        def manifest_app_iso_creation_location = "${iso_creation_location}/${manifest_space}"
+        def helm_app_iso_creation_location = "${iso_creation_location}/${helm_space}"
+        def aca_app_iso_creation_location = "${iso_creation_location}/${aca_space}"
+        git branch: "${gitlabBranch}", changelog: false, credentialsId: 'ssh-Jenkins-s02', poll: false, url: "${deploy_repo}"
+        echo 'Start Docker Packaging'
+        println "printing the checkbox value" + usePromotedArtifacts
+        appISOPackageDocker{
+            promotedArtifacts = usePromotedArtifacts
+            group_name = iso_name
+            appISOLocationDocker = docker_app_iso_creation_location
+        }
+        echo 'Start Manifest Packaging'
+        appISOPackageManifest{
+            group_name = iso_name
+            appISOLocationManifest = manifest_app_iso_creation_location
+        }
+        echo 'Start Helm Chart Packaging'
+        appISOPackageHelm{
+            group_name = iso_name
+            appISOLocationHelm = helm_app_iso_creation_location
+        }
+        echo 'Start ACA Packaging'
+        appISOPackageACA{
+            promotedArtifacts = usePromotedArtifacts
+            group_name = iso_name
+            appISOLocationACA = aca_app_iso_creation_location
+        }
+    }
+}

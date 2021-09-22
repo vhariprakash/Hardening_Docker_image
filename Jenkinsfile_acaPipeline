@@ -1,0 +1,99 @@
+@Library(['common-lib-devops@release1', 'dsl-lib']) _
+ acaPipeline {
+   enable_stages = ['approval','code_checkout','sonar_analysis','publish_jar', 'update_additional_values' ,'helm_deployment_dev','helm_bdd' ,'publish_docker','update_iso_manifest','build_and_unit_test', 'iso_deployment']
+   flowdockApiToken         = '0931785b567893341786cb5b7941eda3'
+   mailingList              = 'niharika.gupta3@ge.com'
+   project                  = 'dicom-web-imaging-filmer'
+   dockerName               = 'dicom_web_imaging_filmer'
+   isSaasOnly               = 'yes'
+   enableDebug              = 'false'
+   filePattern              = 'service/build/libs/*.jar'
+   targetRepo               = 'maven-dev-coreload'
+   sonarProjectKey          = 'com.ge.hc.BLR.Test.DicomWebImagingFilmer'
+   sonarProjectName         = 'Coreload.TEST.DicomWebImagingFilmer'
+   sonarLanguage            = 'typescript'
+   sonarSources             = 'src'
+   sonarExclusions			= '**/test/**'
+   enableDeployment         = "true"
+   hostip_dev_env           = '3.204.30.206'
+   //hostip_dev_env_helm      = '3.204.30.123'
+   buildNode                = 'CL_Build_Node_03'
+   customBuildCommand       = ' '
+   source_deployment_folder     = 'deployment-files/helm_charts/dicom-web-imaging-filmer'
+   manifest_file_name           = 'dicom-web-imaging-filmer-manifest.yaml'
+   manifest_folder              = 'deployment-files/deployment_manifest'
+   enableIsoDeployment      = 'true'
+   serviceName              = 'dicom-web-imaging-filmer'
+   releaseVersion           = 'Coreload5x-1.0'
+   Use_Promoted_Artifacts_Only = 'false'
+   HelmChartLocation="deployment-files/helm_charts/dicom-web-imaging-filmer"
+   HelmTgzFileName="dicom_web_imaging_filmer"
+   ServiceVersion="1.0.0"
+   IsoName="Dicom-Web-Imaging-Filmer"
+   //requireAcaArtifactUpdate = 'false'
+   AppManifestFile="deployment-files/deployment_manifest/dicom-web-imaging-filmer-manifest.yaml"
+   DockerTarName="dicom_web_imaging_filmer"
+   IsoFolderName="SERVICE-ISO"
+   deploy_project_name      = 'dicom-web-imaging-filmer'
+   customBuildCommand       = ' '
+   enableDeploymentOnTest   = "false"
+   multiModuleProject       = 'no'
+   Modality                 = 'coreload-5x' 
+   outputArtifacts          = ['docker']
+   npmSnapshotRepository = 'npm-coreload-dev'
+   Modality                 = 'coreload-5x' 
+   npmArtifactoryUrl        = 'https://blr-artifactory.cloud.health.ge.com/artifactory'
+   iso_group_name           = 'dicom-web-imaging-filmer'
+   enablemultiService       = false
+   dockerImageReferences        = [dicom_web_imaging_filmer:['image.repository', 'image.tag']]
+   dockerRepo               = 'docker-coreload-all'
+//   artifactory_location     = ''
+   dockerArtifactoryRepoName = 'docker-coreload-all'
+//   docker_artifactory_url    = ''
+   branchForAdditionalUpdate = 'devopsPipelineIntegrationCD_devMerged'
+   //--------------------------Standard ISO Creation----------------------------
+   enableisoCreation        = 'true'
+   isoVersion               = '1.0.0'
+   publishIsoCredId         = 'gip_sv01_artifactory_eu'
+   gitLabCredId             = 'ssh-Jenkins-s02'
+   artifactory_url          = 'hc-eu-west-aws-artifactory.cloud.health.ge.com'
+   isoArtifactoryRepoName = 'generic-eml-snapshot'
+   usePromotedArtifacts     = 'false'
+   artifactoryApiTokenCredId = ''
+   forcedBuild              = 'false'
+   isoGroupName             = 'dicom-web-imaging-filmer'
+   isoNames                 = 'dicom-web-imaging-filmer'
+   deploymentType               = ['iso']
+    //----------------EML TARGET NODE DETAILS------------------
+    emlTargetNodeRootDir           = '/home/EML/EML_HOME'
+    emlTargetNodeCredId            = 'EmlTargetNode'
+    emlTargetNode                  = '10.177.205.137'
+    emlTargetNodeSshPort           = '22'
+    isoDeployType                  = ['eml']
+    deploymentNodeName             = "DeploymentNode-5xIsoEml"
+    cloud_name_jenkins             = 'isoEmlHelmAkritiCloud'
+	pod_namespace                  = 'edison-core'
+	jnlp_repo                      = 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-snapshot-eis/jenkins/jnlp-slave:3.35-1-custom-alpine'
+	bdd_runner_image_repo          = 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-snapshot-eis/eis-test-data/eis-test-data:latest'
+	bddPublisherCredentials      = 'bdd-publisher-credentials'
+	bdd_publisher_node             = '10.177.216.124'
+	podTemplateCredId           = 'gip_sv01_gitswarm_gxp'
+	component_testing_base_dir_structure = 'component-test'
+	component_testing_build_dir_structure = 'component-test/build/'
+	credentials_id             = ''
+	buildType           = 'gradle'
+    testBuildCommand    = 'gradle clean build'
+
+	
+	
+	//----------------DEVOPS DSL WITH BRANCH--------------------
+    dslRepo                  = 'git@gitlab-gxp.cloud.health.ge.com:imaging-devops/common-lib-devops.git'
+    dslBranch                = 'cd-pipeline-coreload'
+    deployRepoName           = 'CL-5x-Deploy'
+    //-----------------DEPLOY REPO DETAILS-----------------------
+    deployRepoBranch = 'cl5x-manifest-update-test'
+    deployRepo = 'git@gitlab-gxp.cloud.health.ge.com:Imaging-platform/CL-5x-Deploy.git'
+
+   
+
+}

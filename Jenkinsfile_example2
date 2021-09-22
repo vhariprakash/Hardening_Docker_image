@@ -1,0 +1,16 @@
+@Library(['common-lib-devops@1.0.0', 'dsl-lib']) _
+common_pipeline {
+//------------------- Communication Parameters -------------------
+    mailingList                = 'jayaprasad.rao@ge.com'
+
+//------------------- Common Parameters -------------------
+    project                    = 'pltawlibs'
+    Modality                   = 'mammo'
+    version                    = '1.2.3'
+    enable_stages              = [ 'build', 'publish' ]
+
+//------------------- Build parameters --------------------
+    build_prestep              = 'source setDevEnv.sh'
+    build_poststep             = 'sh cleanup.sh'
+    buildType                  = 'maven'
+}

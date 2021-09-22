@@ -1,0 +1,777 @@
+"coreload-5x":
+    buildNode : "Docker06"
+    releaseBranch:
+       - "master"
+       - "em-master"
+    integBranch:
+       - "integ"
+       - "em-integ"
+    artifactory_url: "hc-eu-west-aws-artifactory.cloud.health.ge.com"
+    gitlab_cred_id: "ssh-Jenkins-s02"
+    gitlab_connection: 'orginization gitlab'
+
+    checkoutSleepTime: 20
+    contArgs: '-v /dockerspace:/dockerspace:rw -v /run/docker.sock:/run/docker.sock -v /dockerspace/sonarCache:/root/.sonar/cache -v /tmp:/tmp -v /var/spool/jenkins:/var/spool/jenkins:ro --net=host'''
+    docker_build_publish_arch: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-imaging-devops/dvo-dind:3f423dfa'
+    eu_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    blr_artifactory_credID_username_passwd: 'BlrArtifactoryCredentials'
+    us_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    eu_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+    blr_artifactory_credID_api_key: 'BlrArtifactoryApiKey'
+    us_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+
+    maven_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/build-tools-eis-repo:1.0.0"
+    gradle_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/nextgen_build:gradle_5_6_2_v2"
+    go_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/linux-java8-gradle562-go113:1"
+    python_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    npm_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/nextgen_build:gradle_3_5"
+    cpp_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/sles15_build_image:eml"
+    shell_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    yq_arch: 'blr-artifactory.cloud.health.ge.com/docker-snapshot-eis-all/devops/yq/yq:1.0.0'
+    pdfconverter_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/json2pdf:2"
+
+    deploy_repo: "git@gitlab-gxp.cloud.health.ge.com:Imaging-platform/CL-5x-Deploy.git"
+    gradleVersion: 'gradle-4.1'
+    dsl_repo: "git@gitlab-gxp.cloud.health.ge.com:imaging-devops/common-lib-devops.git"
+    dsl_branch: "master"
+    release:
+        docker_repo: 'docker-eml-release'
+        maven_repo: 'maven-eml-release'
+        generic_repo: 'generic-eml-release'
+        yum_repo: 'yum-eml-release'
+        npm_repo: 'npm-eml-release'
+        helm_repo: 'helm-eml-release'
+        pypi_repo: 'pypi-eml-release'
+        desc_style: 'background-color:green;color:white;padding:5px;font-size:12px;'  
+        pipelinePhase: "RELEASE"
+    dev:
+        docker_repo: 'docker-eml-dev'
+        maven_repo: 'maven-eml-dev'
+        generic_repo: 'generic-eml-dev'
+        yum_repo: 'yum-eml-dev'
+        npm_repo: 'npm-eml-dev'
+        helm_repo: 'helm-eml-dev'
+        pypi_repo: 'pypi-eml-dev'
+        pipelinePhase: "DEVELOPMENT"
+        desc_style: 'background-color:green;color:black;padding:5px;font-size:12px;'            
+    integ:
+        docker_repo: 'docker-eml-staging'
+        maven_repo: 'maven-eml-staging'
+        generic_repo: 'generic-eml-staging'
+        yum_repo: 'yum-eml-staging'
+        npm_repo: 'npm-eml-staging'
+        helm_repo: 'helm-eml-staging'
+        pypi_repo: 'pypi-eml-staging'
+        pipelinePhase: "DEVELOPMENT"
+        desc_style: 'background-color:green;color:gold;padding:5px;font-size:12px;' 
+
+#  sonar:
+    sonar_scanner_path : "/dockerspace/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar-scanner-3.2.0.1227-linux/bin/sonar-scanner "
+    sonarHostUrl : 'https://sonar.cloud.health.ge.com'
+    sonarQubeEnv : 'SONAR_CLOUD_PROD'
+    hardening_score: 15
+
+#  cd:
+    componentTestingBaseDirStructure: "/component-test"
+    componentTestingBuildDirStructure: "/component-test/build/"
+    bddFeatureFilesLocation : "component-test/src/test/resources/feature/"
+    publishDir: "/jenkins_workspace/Coreload-5x-Service/"
+    TargetNode: ""
+    jnlp_repo: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-snapshot-eis/jenkins/jnlp-slave:3.35-1-custom-alpine'
+    bdd_runner_image_repo : 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-snapshot/nuevo-test-data/nuevo-test-data:latest'
+    bddPublisherCredentials: "bdd-publisher-credentials"
+    bdd_publisher_node: '10.177.216.124'
+    pod_template_cred_id: 'gip_sv01_gitswarm_gxp'
+    bddGitHttpsCredID: 'bddGitHttpsCredID'
+    bddPodExecuteLocation: '/devopsDsl/resources/coreload-CD/bddPodExecuteBDD.sh'
+    bddPodDeployLocation: '/devopsDsl/resources/coreload-CD/bddPodDeploy.sh'
+    bddPodStatusCheckLocation: '/devopsDsl/resources/coreload-CD/bddPodStatusCheck.sh'
+    bddPodReportPackageLocation: '/devopsDsl/resources/coreload-CD/bddPodReportPackage.sh'
+    bddEdgeWrapperShellLocation: '/devopsDsl/resources/coreload-CD/edgeBddPodWrapper.sh'
+    reportMountLocation: '/export/home/sdc/nuevo/resources/' #in deploy.yml of dev repo
+    rpmTargetNodeCredId: 'rpmTargetNode'
+    rpmDeploymentShellLocation: '/devopsDsl/resources/coreload-CD/rpmDeployment.sh'
+    rpmBddShellLocation: '/devopsDsl/resources/coreload-CD/rpmBddExecution.sh'
+    rpmBddPublishShellLocation: '/devopsDsl/resources/coreload-CD/rpmBddReportPublish.sh'
+
+##################################################################################################################################
+"coreload-4x":
+    buildNode : "Docker06"
+    releaseBranch:
+       - "master"
+    integBranch:
+        - "integ"
+    artifactory_url: "hc-eu-west-aws-artifactory.cloud.health.ge.com"
+    gitlab_cred_id: "ssh-Jenkins-s02"
+    gitlab_connection: 'orginization gitlab'
+    bddPublisherCredentials: "bdd-publisher-credentials"
+    bddPublisherNode: "10.177.216.124"
+    checkoutSleepTime: 20
+    contArgs: '-v /dockerspace:/dockerspace:rw -v /run/docker.sock:/run/docker.sock -v /dockerspace/sonarCache:/root/.sonar/cache -v /tmp:/tmp -v /var/spool/jenkins:/var/spool/jenkins:ro --net=host'''
+    docker_build_publish_arch: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-imaging-devops/dvo-dind:3f423dfa'
+    eu_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    blr_artifactory_credID_username_passwd: 'BlrArtifactoryCredentials'
+    us_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    eu_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+    blr_artifactory_credID_api_key: 'BlrArtifactoryApiKey'
+    us_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+
+    maven_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/build-tools-eis-repo:1.0.0"
+    gradle_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/nextgen_build:gradle_5_6_2_v2"
+    go_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/linux-java8-gradle562-go113:1"
+    python_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    cpp_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/sles15_build_image:eml"
+    npm_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/nextgen_build:gradle_3_5"
+    shell_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    yq_arch: 'blr-artifactory.cloud.health.ge.com/docker-snapshot-eis-all/devops/yq/yq:1.0.0'
+    pdfconverter_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/json2pdf:2"
+
+    deploy_repo: "git@gitlab-gxp.cloud.health.ge.com:Imaging-platform/CL-5x-Deploy.git"
+    gradleVersion: 'gradle-4.1'
+    dsl_repo: "git@gitlab-gxp.cloud.health.ge.com:imaging-devops/common-lib-devops.git"
+    dsl_branch: "master"
+    release:
+        docker_repo: "docker-coreload-snapshot"
+        maven_repo: "maven-snapshot-coreload"
+        generic_repo: 'generic-eml-snapshot'
+        yum_repo: 'yum-eml-snapshot'
+        desc_style: 'background-color:green;color:white;padding:5px;font-size:12px;'
+        pipelinePhase: "RELEASE"
+
+    integ:
+        docker_repo: "docker-coreload-dev"
+        maven_repo: "maven-coreload-all"
+        generic_repo: 'generic-eml-snapshot'
+        yum_repo: 'yum-eml-snapshot'
+        npm_repo: 'npm-eis-all'
+        desc_style: 'background-color:green;color:gold;padding:5px;font-size:12px;'
+        pipelinePhase: "DEVELOPMENT"
+    dev:
+        docker_repo: "docker-coreload-dev"
+        maven_repo: "maven-coreload-all"
+        generic_repo: 'generic-eml-snapshot'
+        yum_repo: 'yum-eml-snapshot'
+        npm_repo: 'npm-eis-all'
+        desc_style: 'background-color:green;color:black;padding:5px;font-size:12px;'
+        pipelinePhase: "DEVELOPMENT"
+
+#  sonar:
+    sonar_scanner_path : "/dockerspace/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar-scanner-3.2.0.1227-linux/bin/sonar-scanner "
+    sonarHostUrl : 'https://sonar.cloud.health.ge.com'
+    sonarQubeEnv : 'SONAR_CLOUD_PROD'
+    hardening_score: 15
+
+#  cd:
+    componentTestingBaseDirStructure: "/component-test"
+    componentTestingBuildDirStructure: "/component-test/build/"
+    bddFeatureFilesLocation : "component-test/src/test/resources/feature/"
+    publishDir: "/jenkins_workspace/Coreload-5x-Service/"
+    TargetNode: ""
+    jnlp_repo: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-snapshot-eis/jenkins/jnlp-slave:3.35-1-custom-alpine'
+    bdd_runner_image_repo : 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-snapshot/nuevo-test-data/nuevo-test-data:latest'
+    bdd_publisher_credentials: 'bdd-publisher-credentials'
+    bdd_publisher_node: '10.177.216.124'
+    pod_template_cred_id: 'gip_sv01_gitswarm_gxp'
+    bddGitHttpsCredID: 'bddGitHttpsCredID'
+    bddPodExecuteLocation: '/devopsDsl/resources/coreload-CD/bddPodExecuteBDD.sh'
+    bddPodDeployLocation: '/devopsDsl/resources/coreload-CD/bddPodDeploy.sh'
+    bddPodStatusCheckLocation: '/devopsDsl/resources/coreload-CD/bddPodStatusCheck.sh'
+    bddPodReportPackageLocation: '/devopsDsl/resources/coreload-CD/bddPodReportPackage.sh'
+    bddEdgeWrapperShellLocation: '/devopsDsl/resources/coreload-CD/edgeBddPodWrapper.sh'
+    reportMountLocation: '/export/home/sdc/nuevo/resources/' #in deploy.yml of dev repo
+    rpmTargetNodeCredId: 'rpmTargetNode'
+    rpmDeploymentShellLocation: '/devopsDsl/resources/coreload-CD/rpmDeployment.sh'
+    rpmBddShellLocation: '/devopsDsl/resources/coreload-CD/rpmBddExecution.sh'
+    rpmBddPublishShellLocation: '/devopsDsl/resources/coreload-CD/rpmBddReportPublish.sh'
+
+##################################################################################################################################
+"cyberpackage":
+    buildNode : "Docker06"
+    releaseBranch:
+       - "release_3.0.0"
+       - "release3-3.1.0"
+    integBranch:
+        - "integ"
+        - "master"
+    artifactory_url: "hc-eu-west-aws-artifactory.cloud.health.ge.com"
+    gitlab_cred_id: "ssh-Jenkins-s02"
+    gitlab_connection: 'orginization gitlab'
+    bddPublisherCredentials: "bdd-publisher-credentials"
+    bddPublisherNode: "10.177.216.124"
+    checkoutSleepTime: 20
+    contArgs: '-v /dockerspace:/dockerspace:rw -v /dockerspace/sonarCache:/root/.sonar/cache -v /tmp:/tmp -v /run/docker.sock:/run/docker.sock -v /var/spool/jenkins:/var/spool/jenkins:ro --net=host'''
+    docker_build_publish_arch: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-imaging-devops/dvo-dind:3f423dfa'
+    eu_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    blr_artifactory_credID_username_passwd: 'BlrArtifactoryCredentials'
+    us_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    eu_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+    blr_artifactory_credID_api_key: 'BlrArtifactoryApiKey'
+    us_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+
+    maven_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/build-tools-eis-repo:1.0.0"
+    gradle_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/nextgen_build:gradle_5_6_2_v2"
+    go_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/build-tools-eis-repo:1.0.0"
+    python_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    npm_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/nextgen_build:gradle_3_5"
+    cpp_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/sles15_build_image:eml"
+    shell_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    yq_arch: 'blr-artifactory.cloud.health.ge.com/docker-snapshot-eis-all/devops/yq/yq:1.0.0'
+    pdfconverter_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/json2pdf:2"
+
+    deploy_repo: "git@gitlab-gxp.cloud.health.ge.com:Imaging-platform/CL-5x-Deploy.git"
+    gradleVersion: 'gradle-4.1'
+    dsl_repo: "git@gitlab-gxp.cloud.health.ge.com:imaging-devops/common-lib-devops.git"
+    dsl_branch: "master"
+    release:
+        docker_repo: "docker-coreload-snapshot"
+        maven_repo: "maven-release-coreload"
+        generic_repo: 'generic-coreload-release'
+        yum_repo: 'yum-eml-snapshot'
+        desc_style: 'background-color:green;color:white;padding:5px;font-size:12px;'
+        pipelinePhase: "RELEASE"
+
+    integ:
+        docker_repo: "docker-coreload-dev"
+        maven_repo: "generic-coreload-snapshot"
+        generic_repo: 'generic-coreload-snapshot'
+        yum_repo: 'yum-eml-snapshot'
+        desc_style: 'background-color:green;color:gold;padding:5px;font-size:12px;'
+        pipelinePhase: "DEVELOPMENT"
+
+    dev:
+        docker_repo: "docker-coreload-dev"
+        maven_repo: "generic-coreload-snapshot"
+        generic_repo: 'generic-coreload-snapshot'
+        yum_repo: 'yum-eml-snapshot'
+        desc_style: 'background-color:green;color:black;padding:5px;font-size:12px;'
+        pipelinePhase: "DEVELOPMENT"
+
+#  sonar:
+    sonar_scanner_path : "/dockerspace/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar-scanner-3.2.0.1227-linux/bin/sonar-scanner "
+    sonarHostUrl : 'https://sonar.cloud.health.ge.com'
+    sonarQubeEnv : 'SONAR_CLOUD_PROD'
+    hardening_score: 15
+
+#  cd:
+    componentTestingBaseDirStructure: "/component-test"
+    componentTestingBuildDirStructure: "/component-test/build/"
+    bddFeatureFilesLocation : "component-test/src/test/resources/feature/"
+    publishDir: "/jenkins_workspace/Coreload-5x-Service/"
+    TargetNode: ""
+    jnlp_repo: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-snapshot-eis/jenkins/jnlp-slave:3.35-1-custom-alpine'
+    bdd_runner_image_repo : 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-snapshot/nuevo-test-data/nuevo-test-data:latest'
+    bdd_publisher_credentials: 'bdd-publisher-credentials'
+    bdd_publisher_node: '10.177.216.124'
+    pod_template_cred_id: 'gip_sv01_gitswarm_gxp'
+    bddGitHttpsCredID: 'bddGitHttpsCredID'
+    bddPodExecuteLocation: '/devopsDsl/resources/coreload-CD/bddPodExecuteBDD.sh'
+    bddPodDeployLocation: '/devopsDsl/resources/coreload-CD/bddPodDeploy.sh'
+    bddPodStatusCheckLocation: '/devopsDsl/resources/coreload-CD/bddPodStatusCheck.sh'
+    bddPodReportPackageLocation: '/devopsDsl/resources/coreload-CD/bddPodReportPackage.sh'
+    bddEdgeWrapperShellLocation: '/devopsDsl/resources/coreload-CD/edgeBddPodWrapper.sh'
+    reportMountLocation: '/export/home/sdc/nuevo/resources/' #in deploy.yml of dev repo
+
+##################################################################################################################################
+
+"mammo":
+    buildNode : "MAMMO_LNX_SLES"
+    releaseBranch:
+       - "Dev_Zephyr2_M2"
+       - "Integ_Zephyr2_M2"
+       - "devops_master"
+       - "Dev_Infinity2_SLES"
+
+    artifactory_url: "blr-artifactory.cloud.health.ge.com"
+    gitlab_cred_id: "ssh-Jenkins-s02"
+    gitlab_connection: 'orginization gitlab'
+    bddPublisherCredentials: "bdd-publisher-credentials"
+    bddPublisherNode: "10.177.216.124"
+    podTemplateCredId: "gip_sv01_gitswarm_gxp"
+    checkoutSleepTime: 20
+    contArgs: '-v /dockerspace:/dockerspace:rw -v /run/docker.sock:/run/docker.sock -v /dockerspace/sonarCache:/root/.sonar/cache -v /tmp:/tmp -v /var/spool/jenkins:/var/spool/jenkins:ro --net=host'''
+    docker_build_publish_arch: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-imaging-devops/dvo-dind:3f423dfa'
+    eu_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    blr_artifactory_credID_username_passwd: 'BlrArtifactoryCredentials'
+    us_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    eu_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+    blr_artifactory_credID_api_key: 'BlrArtifactoryApiKey'
+    us_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+
+    maven_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-mammo-snapshot/infra/sles15:15vSP2_v1"
+    gradle_arch: ""
+    go_arch: ""
+    python_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    npm_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/nextgen_build:gradle_3_5"
+    cpp_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-mammo-snapshot/infra/sles15:15vSP2_v1"
+    shell_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    yq_arch: 'blr-artifactory.cloud.health.ge.com/docker-snapshot-eis-all/devops/yq/yq:1.0.0'
+    pdfconverter_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/json2pdf:2"
+
+    deploy_repo: "git@gitlab-gxp.cloud.health.ge.com:Imaging-platform/CL-5x-Deploy.git"
+    gradleVersion: 'gradle-4.1'
+    dsl_repo: "git@gitlab-gxp.cloud.health.ge.com:imaging-devops/common-lib-devops.git"
+    dsl_branch: "master"
+    release:
+        docker_repo: "docker-coreload-snapshot"
+        maven_repo: "maven-release-coreload"
+        yum_repo: "yum-mammo-release"
+        generic_repo: 'generic-mammo-release'
+        desc_style: 'background-color:green;color:white;padding:5px;font-size:12px;'
+        pipelinePhase: "RELEASE"
+
+    integ:
+        docker_repo: "docker-coreload-dev"
+        maven_repo: "generic-coreload-snapshot"
+        yum_repo: "yum-mammo-snapshot"
+        generic_repo: 'generic-mammo-snapshot'
+        desc_style: 'background-color:green;color:gold;padding:5px;font-size:12px;'
+        pipelinePhase: "DEVELOPMENT"
+
+    dev:
+        docker_repo: "docker-coreload-dev"
+        maven_repo: "generic-coreload-snapshot"
+        yum_repo: "yum-mammo-snapshot"
+        generic_repo: 'generic-mammo-snapshot'
+        desc_style: 'background-color:green;color:black;padding:5px;font-size:12px;'
+        pipelinePhase: "DEVELOPMENT"
+
+#  sonar:
+    sonar_scanner_path : "/dockerspace/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar-scanner-3.2.0.1227-linux/bin/sonar-scanner "
+    sonarHostUrl : 'https://sonar.cloud.health.ge.com'
+    sonarQubeEnv : 'SONAR_CLOUD_PROD'
+    hardening_score: 15
+
+#  cd:
+    componentTestingBaseDirStructure: "/component-test"
+    componentTestingBuildDirStructure: "/component-test/build/"
+    bddFeatureFilesLocation : "component-test/src/test/resources/feature/"
+    publishDir: "/jenkins_workspace/Coreload-5x-Service/"
+    TargetNode: ""
+    jnlp_repo: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-snapshot-eis/jenkins/jnlp-slave:3.35-1-custom-alpine'
+    bdd_runner_image_repo : 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-snapshot/nuevo-test-data/nuevo-test-data:latest'
+    bdd_publisher_credentials: 'bdd-publisher-credentials'
+    bdd_publisher_node: '10.177.216.124'
+    pod_template_cred_id: 'gip_sv01_gitswarm_gxp'
+    bddGitHttpsCredID: 'bddGitHttpsCredID'
+    bddPodExecuteLocation: '/devopsDsl/resources/coreload-CD/bddPodExecuteBDD.sh'
+    bddPodDeployLocation: '/devopsDsl/resources/coreload-CD/bddPodDeploy.sh'
+    bddPodStatusCheckLocation: '/devopsDsl/resources/coreload-CD/bddPodStatusCheck.sh'
+    bddPodReportPackageLocation: '/devopsDsl/resources/coreload-CD/bddPodReportPackage.sh'
+    bddEdgeWrapperShellLocation: '/devopsDsl/resources/coreload-CD/edgeBddPodWrapper.sh'
+    reportMountLocation: '/export/home/sdc/nuevo/resources/' #in deploy.yml of dev repo
+#####################################################################################################
+"intelligent-workflow":
+    buildNode : "Docker06"
+    releaseBranch:
+       - "master"
+
+    artifactory_url: "hc-eu-west-aws-artifactory.cloud.health.ge.com"
+    gitlab_cred_id: "ssh-Jenkins-s02"
+    gitlab_connection: 'Gitlab'
+    bddPublisherCredentials: "bdd-publisher-credentials"
+    bddPublisherNode: "10.177.216.124"
+    checkoutSleepTime: 20
+    contArgs: '-v /dockerspace:/dockerspace:rw -v /run/docker.sock:/run/docker.sock -v /dockerspace/sonarCache:/root/.sonar/cache -v /tmp:/tmp -v /var/spool/jenkins:/var/spool/jenkins:ro --net=host'''
+    docker_build_publish_arch: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-imaging-devops/dvo-dind:3f423dfa'
+    eu_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    blr_artifactory_credID_username_passwd: 'BlrArtifactoryCredentials'
+    us_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    eu_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+    blr_artifactory_credID_api_key: 'BlrArtifactoryApiKey'
+    us_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+
+    maven_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/build-tools-eis-repo:1.0.0"
+    gradle_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/nextgen_build:gradle_5_6_2_v2"
+    go_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/linux-java8-gradle562-go113:1"
+    python_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    npm_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/nextgen_build:gradle_3_5"
+    cpp_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/sles15_build_image:eml"
+    shell_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    yq_arch: 'blr-artifactory.cloud.health.ge.com/docker-snapshot-eis-all/devops/yq/yq:1.0.0'
+    pdfconverter_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/json2pdf:2"
+
+    deploy_repo: "git@gitlab-gxp.cloud.health.ge.com:Imaging-platform/CL-5x-Deploy.git"
+    gradleVersion: 'gradle-4.1'
+    dsl_repo: "git@gitlab-gxp.cloud.health.ge.com:imaging-devops/common-lib-devops.git"
+    dsl_branch: "master"
+    release:
+        docker_repo: "docker-imaging-solutions-snapshot"
+        maven_repo: "maven-release-coreload"
+        generic_repo: 'generic-eml-release'
+        yum_repo: 'yum-eml-release'
+        desc_style: 'background-color:green;color:white;padding:5px;font-size:12px;'
+        pipelinePhase: "RELEASE"
+
+    integ:
+        docker_repo: "docker-imaging-solutions-dev"
+        maven_repo: "generic-coreload-snapshot"
+        generic_repo: 'generic-eml-snapshot'
+        yum_repo: 'yum-eml-snapshot'
+        desc_style: 'background-color:green;color:gold;padding:5px;font-size:12px;'
+        pipelinePhase: "DEVELOPMENT"
+
+    dev:
+        docker_repo: "docker-imaging-solutions-dev"
+        maven_repo: "generic-coreload-snapshot"
+        generic_repo: 'generic-eml-snapshot'
+        yum_repo: 'yum-eml-snapshot'
+        desc_style: 'background-color:green;color:black;padding:5px;font-size:12px;'
+        pipelinePhase: "DEVELOPMENT"
+
+#  sonar:
+    sonar_scanner_path : "/dockerspace/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar-scanner-3.2.0.1227-linux/bin/sonar-scanner "
+    sonarHostUrl : 'https://sonar.cloud.health.ge.com'
+    sonarQubeEnv : 'SONAR_CLOUD_PROD'
+    hardening_score: 15
+
+#  cd:
+    componentTestingBaseDirStructure: "/component-test"
+    componentTestingBuildDirStructure: "/component-test/build/"
+    bddFeatureFilesLocation : "component-test/src/test/resources/feature/"
+    publishDir: "/jenkins_workspace/Coreload-5x-Service/"
+    TargetNode: ""
+    jnlp_repo: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-snapshot-eis/jenkins/jnlp-slave:3.35-1-custom-alpine'
+    bdd_runner_image_repo : 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-snapshot/nuevo-test-data/nuevo-test-data:latest'
+    bdd_publisher_credentials: 'bdd-publisher-credentials'
+    bdd_publisher_node: '10.177.216.124'
+    pod_template_cred_id: 'gip_sv01_gitswarm_gxp'
+    bddGitHttpsCredID: 'bddGitHttpsCredID'
+    bddPodExecuteLocation: '/devopsDsl/resources/coreload-CD/bddPodExecuteBDD.sh'
+    bddPodDeployLocation: '/devopsDsl/resources/coreload-CD/bddPodDeploy.sh'
+    bddPodStatusCheckLocation: '/devopsDsl/resources/coreload-CD/bddPodStatusCheck.sh'
+    bddPodReportPackageLocation: '/devopsDsl/resources/coreload-CD/bddPodReportPackage.sh'
+    bddEdgeWrapperShellLocation: '/devopsDsl/resources/coreload-CD/edgeBddPodWrapper.sh'
+    reportMountLocation: '/export/home/sdc/nuevo/resources/' #in deploy.yml of dev repo
+    rpmTargetNodeCredId: 'rpmTargetNode'
+    rpmDeploymentShellLocation: '/devopsDsl/resources/coreload-CD/rpmDeployment.sh'
+    rpmBddShellLocation: '/devopsDsl/resources/coreload-CD/rpmBddExecution.sh'
+    rpmBddPublishShellLocation: '/devopsDsl/resources/coreload-CD/rpmBddReportPublish.sh'
+########################################################################################################
+"ehl":
+    buildNode : "eis-devops"
+    releaseBranch:
+       - "master"
+       - "integ"
+       - "devops_master"
+
+    #artifactory_url: "hc-eu-west-aws-artifactory.cloud.health.ge.com"
+    artifactory_url: "blr-artifactory.cloud.health.ge.com"
+    gitlab_cred_id: "root-user-docker06"
+    gitlab_connection: 'orginization gitlab'
+    bddPublisherCredentials: "bdd-publisher-credentials"
+    bddPublisherNode: "10.177.216.124"
+    podTemplateCredId: "gip_sv01_gitswarm_gxp"
+    checkoutSleepTime: 20
+    contArgs: '-v /dockerspace:/dockerspace:rw -v /run/docker.sock:/run/docker.sock -v /dockerspace/sonarCache:/root/.sonar/cache -v /tmp:/tmp -v /var/spool/jenkins:/var/spool/jenkins:ro --net=host'''
+    docker_build_publish_arch: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-imaging-devops/dvo-dind:3f423dfa'
+    eu_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    blr_artifactory_credID_username_passwd: 'BlrArtifactoryCredentials'
+    us_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    eu_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+    blr_artifactory_credID_api_key: 'BlrArtifactoryApiKey'
+    us_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+
+    maven_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/build-tools-eis-repo:1.0.0"
+    gradle_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/nextgen_build:gradle_5_6_2_v2"
+    go_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/linux-java8-gradle562-go113:1"
+    python_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    cpp_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/sles15_build_image:eml"
+    shell_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    yq_arch: 'blr-artifactory.cloud.health.ge.com/docker-snapshot-eis-all/devops/yq/yq:1.0.0'
+    pdfconverter_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/json2pdf:2"
+    npm_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/nextgen_build:gradle_3_5"
+
+    deploy_repo: "git@gitlab-gxp.cloud.health.ge.com:Edison-Imaging-Service/devops-deploy.git"
+    gradleVersion: 'gradle5.4.1'
+    dsl_repo: "git@gitlab-gxp.cloud.health.ge.com:imaging-devops/common-lib-devops.git"
+    dsl_branch: "master"
+    release:
+        docker_repo: "docker-eis-all"
+        maven_repo: "maven-release-coreload"
+        generic_repo: 'generic-eis-all'
+        yum_repo: 'yum-eml-snapshot'
+        helm_repo: 'helm-ees-all'
+        pipelinePhase: "RELEASE"
+        desc_style: 'background-color:green;color:white;padding:5px;font-size:12px;'
+
+    integ:
+        docker_repo: "docker-eis-all"
+        maven_repo: "generic-coreload-snapshot"
+        generic_repo: 'generic-eis-all'
+        yum_repo: 'yum-eml-snapshot'
+        helm_repo: 'helm-ees-all'
+        pipelinePhase: "DEVELOPMENT"
+        desc_style: 'background-color:green;color:gold;padding:5px;font-size:12px;'
+
+    dev:
+        docker_repo: "docker-eis-all"
+        maven_repo: "generic-coreload-snapshot"
+        generic_repo: 'generic-eis-all'
+        yum_repo: 'yum-eml-snapshot'
+        helm_repo: 'helm-ees-all'
+        pipelinePhase: "DEVELOPMENT"
+        desc_style: 'background-color:green;color:black;padding:5px;font-size:12px;'
+
+#  sonar:
+    sonar_scanner_path : "/dockerspace/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar-scanner-3.2.0.1227-linux/bin/sonar-scanner "
+    sonarHostUrl : 'https://sonar.cloud.health.ge.com'
+    sonarQubeEnv : 'SONAR_CLOUD_PROD'
+    hardening_score: 15
+
+#  cd:
+    componentTestingBaseDirStructure: "/component-test"
+    componentTestingBuildDirStructure: "/component-test/build/"
+    bddFeatureFilesLocation : "component-test/src/test/resources/feature/"
+    publishDir: "/jenkins_workspace/Coreload-5x-Service/"
+    TargetNode: ""
+    jnlp_repo: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-snapshot-eis/jenkins/jnlp-slave:3.35-1-custom-alpine'
+    bdd_runner_image_repo : 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-snapshot/nuevo-test-data/nuevo-test-data:latest'
+    bdd_publisher_credentials: 'bdd-publisher-credentials'
+    bdd_publisher_node: '10.177.216.124'
+    pod_template_cred_id: 'gip_sv01_gitswarm_gxp'
+    bddGitHttpsCredID: 'bddGitHttpsCredID'
+    bddPodExecuteLocation: '/devopsDsl/resources/coreload-CD/bddPodExecuteBDD.sh'
+    bddPodDeployLocation: '/devopsDsl/resources/coreload-CD/bddPodDeploy.sh'
+    bddPodStatusCheckLocation: '/devopsDsl/resources/coreload-CD/bddPodStatusCheck.sh'
+    bddPodReportPackageLocation: '/devopsDsl/resources/coreload-CD/bddPodReportPackage.sh'
+    bddEdgeWrapperShellLocation: '/devopsDsl/resources/coreload-CD/edgeBddPodWrapper.sh'
+    reportMountLocation: '/export/home/sdc/nuevo/resources/' #in deploy.yml of dev repo
+    rpmTargetNodeCredId: 'rpmTargetNode'
+    rpmDeploymentShellLocation: '/devopsDsl/resources/coreload-CD/rpmDeployment.sh'
+    rpmBddShellLocation: '/devopsDsl/resources/coreload-CD/rpmBddExecution.sh'
+    rpmBddPublishShellLocation: '/devopsDsl/resources/coreload-CD/rpmBddReportPublish.sh'
+##################################################################################################################################
+"xray":
+    buildNode : "docker-nocc"
+    releaseBranch:
+       - "master"
+       - "integ"
+       - "em-master"
+       - "em-integ"
+
+    artifactory_url: "hc-us-east-aws-artifactory.cloud.health.ge.com"
+    gitlab_cred_id: "ssh-Jenkins-s02"
+    gitlab_connection: 'orginization gitlab'
+    bddPublisherCredentials: "bdd-publisher-credentials"
+    bddPublisherNode: "10.177.216.124"
+    checkoutSleepTime: 20
+
+#  sonar:
+    sonar_scanner_path : "/disk1/dockserspace/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar-scanner-3.2.0.1227-linux/bin/sonar-scanner "
+    sonarHostUrl : 'https://sonar.cloud.health.ge.com'
+    sonarQubeEnv : 'SONAR_CLOUD_PROD'
+    hardening_score: 15
+
+    contArgs: '-v /dockerspace:/dockerspace:rw -v /run/docker.sock:/run/docker.sock -v /dockerspace/sonarCache:/root/.sonar/cache -v /tmp:/tmp -v /var/spool/jenkins:/var/spool/jenkins:ro --net=host'''
+    docker_build_publish_arch: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-imaging-devops/dvo-dind:3f423dfa'
+    eu_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    blr_artifactory_credID_username_passwd: 'BlrArtifactoryCredentials'
+    us_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    eu_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+    blr_artifactory_credID_api_key: 'BlrArtifactoryApiKey'
+    us_artifactory_credID_api_key: '502612685_Xray_US_artifactory_api_key'
+
+    maven_arch: ""
+    gradle_arch: ""
+    go_arch: ""
+    python_arch: ""
+    cpp_arch: ""
+
+    deploy_repo: ""
+    gradleVersion: ""
+    dsl_repo: "git@gitlab-gxp.cloud.health.ge.com:imaging-devops/common-lib-devops.git"
+    dsl_branch: "master"
+    release:
+        docker_repo: ""
+        maven_repo: ""
+        yum_repo: ""
+        generic_repo: ''
+        yum_repo: ''
+        desc_style: 'background-color:green;color:white;padding:5px;font-size:12px;'
+        pipelinePhase: "RELEASE"
+
+    integ:
+        docker_repo: ""
+        maven_repo: ""
+        generic_repo: 'generic-xray-snapshot'
+        yum_repo: 'gradle-xray-snapshot'
+        desc_style: 'background-color:green;color:gold;padding:5px;font-size:12px;'
+        pipelinePhase: "DEVELOPMENT"
+
+    dev:
+        docker_repo: ""
+        maven_repo: ""
+        generic_repo: 'generic-xray-snapshot'
+        yum_repo: 'gradle-xray-snapshot'
+        desc_style: 'background-color:green;color:black;padding:5px;font-size:12px;'
+        pipelinePhase: "DEVELOPMENT"
+######################################################################################################################
+"hue":
+    buildNode : "Docker06"
+    releaseBranch:
+       - "release"
+    
+    integBranch:
+       - "master"
+
+    artifactory_url: "blr-artifactory.cloud.health.ge.com"
+    gitlab_cred_id: "root-user-docker06"
+    gitlab_connection: 'orginization gitlab'
+    bddPublisherCredentials: "bdd-publisher-credentials"
+    bddPublisherNode: "10.177.216.124"
+    podTemplateCredId: "gip_sv01_gitswarm_gxp"
+    checkoutSleepTime: 20
+    contArgs: '-v /dockerspace:/dockerspace:rw -v /run/docker.sock:/run/docker.sock -v /dockerspace/sonarCache:/root/.sonar/cache -v /tmp:/tmp -v /var/spool/jenkins:/var/spool/jenkins:ro --net=host'''
+    docker_build_publish_arch: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-imaging-devops/dvo-dind:3f423dfa'
+    eu_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    blr_artifactory_credID_username_passwd: 'BlrArtifactoryCredentials'
+    us_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    eu_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+    blr_artifactory_credID_api_key: 'BlrArtifactoryApiKey'
+    us_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+
+#  ci:
+    maven_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/build-tools-eis-repo:1.0.0"
+    gradle_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/nextgen_build:gradle_5_6_2_v2"
+    go_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/linux-java8-gradle562-go113:1"
+    python_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    cpp_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/sles15_build_image:eml"
+    shell_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    yq_arch: 'blr-artifactory.cloud.health.ge.com/docker-snapshot-eis-all/devops/yq/yq:1.0.0'
+    pdfconverter_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/json2pdf:2"
+    npm_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/nextgen_build:gradle_3_5"
+
+    deploy_repo: ""
+    gradleVersion: 'gradle5.4.1'
+    dsl_repo: "git@gitlab-gxp.cloud.health.ge.com:imaging-devops/common-lib-devops.git"
+    dsl_branch: "master"
+    release:
+        docker_repo: "docker-imaging-release"
+        maven_repo: "maven-imaging-release"
+        generic_repo: 'generic-imaging-release'
+        yum_repo: 'yum-imaging-release'
+        helm_repo: 'helm-imaging-release'
+        npm_repo: 'npm-imaging-release'
+        desc_style: 'background-color:green;color:white;padding:5px;font-size:12px;'
+        pipelinePhase: "RELEASE"
+
+    integ:
+        docker_repo: "docker-imaging-staging"
+        maven_repo: "maven-imaging-staging"
+        generic_repo: 'generic-imaging-staging'
+        yum_repo: 'yum-imaging-staging'
+        helm_repo: 'helm-imaging-staging'
+        npm_repo: 'npm-imaging-staging'
+        desc_style: 'background-color:green;color:gold;padding:5px;font-size:12px;'
+        pipelinePhase: "DEVELOPMENT"
+
+    dev:
+        docker_repo: "docker-imaging-dev"
+        maven_repo: "maven-imaging-dev"
+        generic_repo: 'generic-imaging-dev'
+        yum_repo: 'yum-imaging-dev'
+        helm_repo: 'helm-imaging-dev'
+        npm_repo: 'npm-imaging-dev'
+        desc_style: 'background-color:green;color:black;padding:5px;font-size:12px;'
+        pipelinePhase: "DEVELOPMENT"
+
+#  sonar:
+    sonar_scanner_path : "/dockerspace/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar-scanner-3.2.0.1227-linux/bin/sonar-scanner "
+    sonarHostUrl : 'https://sonar.cloud.health.ge.com'
+    sonarQubeEnv : 'SONAR_CLOUD_PROD'
+    hardening_score: 15
+##################################################################################################################################
+
+"uservice":
+    buildNode : "Docker06"
+    releaseBranch:
+       - "master"
+    integBranch:
+       - "integ"
+
+    artifactory_url: "hc-us-east-aws-artifactory.cloud.health.ge.com"
+    gitlab_cred_id: "ssh-Jenkins-s02"
+    gitlab_connection: 'orginization gitlab'
+    bddPublisherCredentials: "bdd-publisher-credentials"
+    bddPublisherNode: "10.177.216.124"
+    checkoutSleepTime: 20
+    contArgs: '-v /dockerspace:/dockerspace:rw -v /run/docker.sock:/run/docker.sock -v /dockerspace/sonarCache:/root/.sonar/cache -v /tmp:/tmp -v /var/spool/jenkins:/var/spool/jenkins:ro --net=host'''
+    docker_build_publish_arch: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-imaging-devops/dvo-dind:3f423dfa'
+    eu_artifactory_credID_username_passwd: 'gip_sv01_artifactory_eu'
+    blr_artifactory_credID_username_passwd: 'BlrArtifactoryCredentials'
+    us_artifactory_credID_username_passwd: 'gip_sv01_artifactory_us'
+    eu_artifactory_credID_api_key: '502782741_Artifactory_API_Key'
+    blr_artifactory_credID_api_key: 'BlrArtifactoryApiKey'
+    us_artifactory_credID_api_key: '502782741_US_Artifactory_API_Key'
+
+
+#  ci:
+    maven_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/build-tools-eis-repo:1.0.0"
+    gradle_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/linux-java8-gradle562-go113:2"
+    go_arch: "hc-us-east-aws-artifactory.cloud.health.ge.com/docker-coreload-all/linux-java8-gradle562-go113:1"
+    python_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/library/python"
+    cpp_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-all/sles15_build_image:eml"
+    npm_arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/nextgen_build:35"
+    yq_arch: 'blr-artifactory.cloud.health.ge.com/docker-snapshot-eis/devops/yq/yq:1.0.0'
+
+    deploy_repo: "git@gitlab-gxp.cloud.health.ge.com:Imaging-platform/CL-5x-Deploy.git"
+    gradleVersion: 'gradle-4.1'
+    dsl_repo: "git@gitlab-gxp.cloud.health.ge.com:imaging-devops/common-lib-devops.git"
+    dsl_branch: "techDebtReduction-cd"
+    release:
+      docker_repo: "docker-imgplatform-release"
+      maven_repo: "maven-imgplatform-release"
+      generic_repo: 'generic-imaging-devops'
+      yum_repo: 'yum-imaging-devops-release'
+      npm_repo: 'npm-imaging-devops'
+      pipelinePhase: "RELEASE"
+      desc_style: 'background-color:green;color:white;padding:5px;font-size:12px;'
+
+    integ:
+      docker_repo: "docker_dev_release_devops"
+      maven_repo: "maven_dev_release_devops"
+      generic_repo: 'generic-imaging-devops'
+      yum_repo: 'yum-imaging-devops-release'
+      npm_repo: 'npm-imaging-devops'
+      pipelinePhase: "DEVELOPMENT"
+      desc_style: 'background-color:green;color:gold;padding:5px;font-size:12px;'
+
+    dev:
+      docker_repo: "docker-imgplatform-dev" 
+      maven_repo: "maven-imgplatform-dev" 
+      generic_repo: 'generic-imgplatform-dev'
+      yum_repo: 'yum-imaging-devops-release'
+      npm_repo: 'npm-imaging-devops'
+      pipelinePhase: "DEVELOPMENT"
+      desc_style: 'background-color:green;color:black;padding:5px;font-size:12px;'
+
+#  sonar:
+    sonar_scanner_path : "/dockerspace/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar-scanner-3.2.0.1227-linux/bin/sonar-scanner "
+    sonarHostUrl : 'https://sonar.cloud.health.ge.com'
+    sonarQubeEnv : 'SONAR_CLOUD_PROD'
+
+    hardening_score: 15
+
+#  cd:
+    componentTestingBaseDirStructure: "/component-test"
+    componentTestingBuildDirStructure: "/component-test/build/"
+    bddFeatureFilesLocation : "component-test/src/test/resources/feature/"
+    publishDir: "/jenkins_workspace/Coreload-5x-Service/"
+    TargetNode: ""
+    jnlp_repo: 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/jenkins/jnlp-slave:3.35-1-custom-alpine'
+    bdd_runner_image_repo : 'hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-coreload-snapshot/nuevo-test-data/nuevo-test-data:latest'
+    bdd_publisher_credentials: 'bdd-publisher-credentials'
+    bdd_publisher_node: '10.177.216.124'
+    pod_template_cred_id: 'gip_sv01_gitswarm_gxp'
+    bddGitHttpsCredID: 'bddGitHttpsCredID'
+    bddPodExecuteLocation: '/devopsDsl/resources/coreload-CD/bddPodExecuteBDD.sh'
+    bddPodDeployLocation: '/devopsDsl/resources/coreload-CD/bddPodDeploy.sh'
+    bddPodStatusCheckLocation: '/devopsDsl/resources/coreload-CD/bddPodStatusCheck.sh'
+    bddPodReportPackageLocation: '/devopsDsl/resources/coreload-CD/bddPodReportPackage.sh'
+    bddEdgeWrapperShellLocation: '/devopsDsl/resources/coreload-CD/edgeBddPodWrapper.sh'
+    reportMountLocation: '/export/home/sdc/nuevo/resources/' #in deploy.yml of dev repo
+    rpmTargetNodeCredId: 'rpmTargetNode'
+    rpmDeploymentShellLocation: '/devopsDsl/resources/coreload-CD/rpmDeployment.sh'
+    rpmBddShellLocation: '/devopsDsl/resources/coreload-CD/rpmBddExecution.sh'
+    rpmBddPublishShellLocation: '/devopsDsl/resources/coreload-CD/rpmBddReportPublish.sh'
+##################################################################################################################################

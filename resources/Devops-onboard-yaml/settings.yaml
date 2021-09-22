@@ -1,0 +1,82 @@
+default_attributes:
+  componentTestingBaseDirStructure: "/component-test"
+  componentTestingBuildDirStructure: "/component-test/build/"
+
+coreload-5x:
+  default:
+    buildNode : "Docker06"
+    approval_project_folder_name : "eis"
+    approverRepoSshUrl: "Edison-Imaging-Service/jenkins-pipeline-approvers.git"
+    approvalMessage: "Approve the build"
+    approvalProjectKey: "CICD_Projects"
+    releaseBranch: "master"
+    arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/build-tools-eis-repo:1.0.0"
+    docker_artifactory_url: "hc-eu-west-aws-artifactory.cloud.health.ge.com"
+    docker_artifactory_repo_name: "docker-coreload-all"
+  ci:
+    mavenReleaseRepo : "maven-release-eis"
+    mavenSnapshotRepo : "maven-snapshot-eis"
+    #mavenDevRepo : "maven-dev-eis"
+    mavenDevRepo: "generic-eml-snapshot/edison-licensing/"
+  cd:
+    dev:
+      k8sTargetNode: "10.177.204.226"
+      k8sTargetNodeToken: "eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRlZmF1bHQtdG9rZW4tNzVmam0iLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGVmYXVsdCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6Ijc4NjVmMDI1LTAzMjMtMTFlYS1iMjRhLTAwNTA1NmEwZWMxNCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkZWZhdWx0OmRlZmF1bHQifQ.xcC_g5zVb4p07xWLzEpIqSZhwWbvA4yX8ER-q8f2PTwu4Iu0cOHL65QvToRZHNBLxV6PhQgylDAW2aQJjMzDzLPkGuUXsLnXH5yupj54HzD6oGxeMQtO-_NN0AguZGqieMDyefQSFPDBs3w4JI0-b1QnXbzrh2Klayf8fmimDqmmE-KY-b4r5RhBGStoJ4kbcWGQaM9bnpjKdpNs5efbljq7s-53HkwTpVdGfbAs8a1aM_99IVv-XVXww5PmNj2GCn0dberWsZ-T0Gm6RkuwRqpVHb1CEkOqKMkdvuZtEKd7fuKrAVVxiCcymuFUTQmetAhfVGoWVllcoypTTKUuGw"
+      bddFeatureFilesLocation : "component-test/src/test/resources/feature/"
+      publishDir: "/jenkins_workspace/Edison-Imaging-Service/"
+      targetDevNode: "10.177.204.226"
+      tarDestinationPreDir: "/jenkins_workspace/Coreload-5x-Service/"
+      cloudNameJenkins: "kubernetes_helm"
+      jnlpRepo: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-snapshot-eis/jenkins/jnlp-slave:3.35-1-custom-alpine"
+      bddRunnerImageRepo: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-snapshot-eis/eis-test-data/eis-test-data:latest"
+      bddPublisherCredentials: "bdd-publisher-credentials"
+      bddPublisherNode: "10.177.216.124"
+      deployRepo: "git@gitlab-gxp.cloud.health.ge.com:Imaging-platform/CL-5x-Deploy.git"
+      podTemplateCredId: "gip_sv01_gitswarm_gxp"
+      componentTestingBaseDirStructure: "/component-test"
+      componentTestingBuildDirStructure: "/component-test/build/"
+    staging:
+      k8sTargetNode: ""
+      bddFeatureFilesLocation : "component-test/src/test/resources/feature/"
+      publishDir: "/jenkins_workspace/Coreload-5x-Service/"
+    prod:
+      k8sTargetNode: ""
+      bddFeatureFilesLocation : "component-test/src/test/resources/feature/"
+      publishDir: "/jenkins_workspace/Coreload-5x-Service/"
+  env-var-name:
+    abc: ""
+
+  eis:
+    default:
+      buildNode : "Docker06"
+      approval_project_folder_name : "eis"
+      approverRepoSshUrl: "Edison-Imaging-Service/jenkins-pipeline-approvers.git"
+      approvalMessage: "Approve the build"
+      approvalProjectKey: "CICD_Projects"
+      releaseBranch: "master"
+      arch: "hc-eu-west-aws-artifactory.cloud.health.ge.com/docker-eis-all/build-tools-eis-repo:1.0.0"
+    ci:
+      mavenReleaseRepo : "maven-release-eis"
+      mavenSnapshotRepo : "maven-snapshot-eis"
+      mavenDevRepo : "maven-dev-eis"
+    cd:
+      dev:
+        k8s_target: "abc"
+        bddFeatureFilesLocation : "component-test/src/test/resources/feature/"
+        publishDir: "/jenkins_workspace/Edison-Imaging-Service/"
+        tarDestinationPreDir: "/jenkins_workspace/Edison-Imaging-Service/"
+        cloudNameJenkins: "kubernetes_helm"
+        deployRepo: "git@gitlab-gxp.cloud.health.ge.com:Edison-Imaging-Service/EES-Deploy.git"
+        podTemplateCredId: "gip_sv01_gitswarm_gxp"
+        componentTestingBaseDirStructure: "/component-test"
+        componentTestingBuildDirStructure: "/component-test/build/"
+      staging:
+        k8s_target: "abc"
+        bddFeatureFilesLocation : "component-test/src/test/resources/feature/"
+        publishDir: "/jenkins_workspace/Edison-Imaging-Service/"
+      prod:
+        k8s_target: "abc"
+        bddFeatureFilesLocation : "component-test/src/test/resources/feature/"
+        publishDir: "/jenkins_workspace/Edison-Imaging-Service/"
+    env-var-name:
+      abc: "abc"
